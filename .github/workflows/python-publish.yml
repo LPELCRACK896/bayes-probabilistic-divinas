@@ -22,6 +22,14 @@ jobs:
 
     steps:
     - uses: actions/checkout@v3
+    
+    - name: Extract tag name
+      id: tag
+      run: echo "::set-output name=tag::$(echo $GITHUB_REF | cut -d '/' -f 3)"
+    - name: Update version
+      run: |
+        tag=$(echo "${{ steps.tag.outputs.tag }}")
+        sed -i "s/version = .*/version = $tag/" setup.py
     - name: Set up Python
       uses: actions/setup-python@v3
       with:
